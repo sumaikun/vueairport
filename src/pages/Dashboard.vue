@@ -1,5 +1,13 @@
 <template>
   <v-container id="dashboard" fluid grid-list-lg class="mx-0 pa-0">
+
+     <v-date-picker
+        v-model="date"
+        full-width
+        :landscape="$vuetify.breakpoint.smAndUp"
+        class="mt-4"
+    ></v-date-picker>
+
     <v-layout row wrap>
       <v-flex md3 sm6 xs12 v-for="(stat,index) in stats.monthlyStats" v-bind:key="index">
         <v-card :class="stat.bgColor" dark>
@@ -25,6 +33,8 @@
       </v-flex>
     </v-layout>
 
+
+  <!--
     <v-layout class="" row wrap>
       <v-flex md4 xs12>
         <v-card light>
@@ -42,34 +52,27 @@
         </v-card>
       </v-flex>
     </v-layout>
+  -->
     
   </v-container>
 </template>
 <script>
-  import Bar from "../components/chart/Bar";
-  import Doughnut from "../components/chart/Doughnut";
-  import LineChart from "../components/chart/LineChart";
+  //import Bar from "../components/chart/Bar";
+  //import Doughnut from "../components/chart/Doughnut";
+  //import LineChart from "../components/chart/LineChart";
+  
   export default {
     name: "Dashboard",
     data() {
-      return {
+      
+      return {      
         stats: {
           monthlyStats: [
             {
               bgColor: "cyan darken-3",
               icon: "card_membership",
-              title: "Nuevos ingresos",
+              title: "Ingresos",
               data: "120",
-              action: {
-                label: "Mas Info",
-                link: ""
-              }
-            },
-            {
-              bgColor: "deep-orange  lighten-3",
-              icon: "card_membership",
-              title: "Total transacciones",
-              data: "780",
               action: {
                 label: "Mas Info",
                 link: ""
@@ -86,10 +89,21 @@
               }
             },
             {
+              bgColor: "deep-orange  lighten-3",
+              icon: "card_membership",
+              title: "Rechazos",
+              data: "8",
+              action: {
+                label: "Mas Info",
+                link: ""
+              }
+            },
+           
+            {
               bgColor: "pink  lighten-4",
               icon: "card_membership",
-              title: "Devoluciones",
-              data: "33%",
+              title: "Cancelaciones",
+              data: "12",
               action: {
                 label: "Mas Info",
                 link: ""
@@ -100,9 +114,9 @@
       };
     },
     components: {
-      Bar,
-      Doughnut,
-      LineChart
+      //Bar,
+      //Doughnut,
+      //LineChart
     },
     mounted() { }
   };

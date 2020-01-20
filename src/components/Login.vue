@@ -131,6 +131,7 @@ import auth from '../utils/auth'
 
             window.setTimeout(function(){ 
               self.$router.push( self.$route.name == 'Login' ? '/bar'  : self.$route.path )
+              window.location.reload();
              }, 1000);
             
 

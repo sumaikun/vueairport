@@ -1,73 +1,69 @@
 <template>
 
    <v-container> 
-    <v-dialog
-      v-model="dialog"
-      width="80%"
-    >
-      <v-card>
-        <v-card-title class="headline">Trazabilidad</v-card-title>
-        <v-card>       
-        <v-card-text>
-          <table class="table" style="width:100%; text-align:center;"  v-if="!isFetching">
-            <thead>
-              <tr>
-                <th>Fecha</th>              
-                <th>Estado</th>
-                <th>Ubicación</th>
-                <th>Acción</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="track in tracks"  v-bind:key="track" >
-                <td>{{ track.timefield }}</td>                
-                <td>{{ track.state }}</td>
-                <td>{{ track.ubication }}</td>
-                <td>{{ track.action }}</td>
-              </tr>
-            </tbody>  
-          </table>
-        </v-card-text>
-   
-        </v-card>
-        
-       </v-card>
-    </v-dialog>
+  
+    <v-card style="background-color:rgba(66,66,66,0.5);" >
+      <v-container fluid>
+        <div>
+          <h3>Filtros:</h3>
+          
+              <v-row>  
+                  <v-col  lg="6" md="12" sm="12" cols="12">
+                    
+                      <v-text-field                      
+                              label="Número de transacción"  
+                              v-model="sku"                    
+                      ></v-text-field>
+                               
+                  </v-col>
+                  <v-col  lg="6" md="12" sm="12" xs="12" cols="12">  
+                    <v-row  justify="center" >
+                      <v-btn color="primary" @click="filterFromNodeSkus()" x-large >
+                        Filtrar transacción
+                      </v-btn>  
+                    </v-row>       
+                  </v-col>
+              </v-row>
+              
+          
+            <v-row> 
 
-    <div>
-      <h3>Filtros</h3>
-      <div>
-          <v-flex xs2>
-              <v-text-field                      
-                      label="Número de tarjeta"  
-                      v-model="sku"                    
-              ></v-text-field>
-          </v-flex>         
-      </div>
-      <div style="display:flex;">
+             <v-col  lg="6" md="6" sm="12">
+               <v-row  align="center" justify="center" > 
+                <v-date-picker v-model="picker"></v-date-picker>
+               </v-row> 
+              </v-col>
+              <v-col  lg="6" md="6" sm="12">
+                <v-row  align="center" justify="center" >
+                  <v-date-picker v-model="picker2"></v-date-picker>
+                </v-row>
+              </v-col>
 
-         <v-flex xs5>
-            <v-date-picker v-model="picker"></v-date-picker>
-          </v-flex>
-          <v-flex xs5>
-            <v-date-picker v-model="picker2"></v-date-picker>
-          </v-flex>
+            </v-row>
+          
+        </div>
+      </v-container>  
+  
 
-      </div>
-    </div>
-     <br/>
+      <v-row>   
+        <v-col  lg="12" md="12" sm="12">
+          <v-row  justify="center" >
+            <v-btn color="primary" @click="filterFromNodeDates()" x-large >Filtrar por fechas</v-btn>
+          </v-row>
+        </v-col>
+        <!--
+        <v-col  lg="6" md="6" sm="12">
+          <v-row  justify="center" >
+            <v-btn color="primary" @click="getItems()" x-large >Traer todos los datos</v-btn>
+          </v-row>  
+        </v-col>
+        -->
+      </v-row>
+      <br>
 
-    <div style="display:flex; justify-content:space-around">
-     
+    </v-card>  
 
-      <v-btn color="primary" @click="filterFromNodeSkus()" x-large >Filtrar tarjeta</v-btn>
-   
-      <v-btn color="primary" @click="filterFromNodeDates()" x-large >Filtrar por fechas</v-btn>
-    
-      <v-btn color="primary" @click="getItems()" x-large >Traer todos los datos</v-btn>
-
-    </div>  
-    <br/>
+    <br>
    
     <v-card>
         <v-card-title>
@@ -126,13 +122,13 @@
         dialog: false,
         headers: [
           { text: 'Cliente', value: 'customer' },
-          { text: 'Tarjeta', value: 'epc' },      
-          { text: 'Ubicacion', value: 'ubication' },
-          { text: 'Estado', value: 'state' },
-          { text: 'Descripción', value: 'description' },
-          { text: 'Fecha', value: 'timefield' },
-          { text: 'Accion', value: 'action' },
-          { text: 'Opciones', value: 'button_action', sortable: false }
+          { text: 'Transacción', value: 'state' },   
+          { text: 'Tarjeta', value: 'card' },
+          { text: 'Estado', value: 'ubication' },             
+          { text: 'Sala', value: 'ubication' },                  
+          { text: 'Adultos acompañantes', value: 'description' },
+          { text: 'Niños acompañantes', value: 'description' },
+          { text: 'Fecha', value: 'timefield' },          
         ],
         filters: {
           sku: [],
@@ -183,7 +179,7 @@
       }      
     },
     beforeMount(){
-      this.getItems()
+      //this.getItems()
     },
    
     

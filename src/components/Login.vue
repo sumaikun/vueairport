@@ -129,10 +129,11 @@ import auth from '../utils/auth'
 
             let self = this;
 
-            window.setTimeout(function(){ 
-              self.$router.push( self.$route.name == 'Login' ? '/bar'  : self.$route.path )
+            self.$router.push( self.$route.name == 'Login' ? '/bar'  : self.$route.path );
+
+            /*window.setTimeout(function(){              
               window.location.reload();
-             }, 1000);
+             }, 1000);*/
             
 
           }

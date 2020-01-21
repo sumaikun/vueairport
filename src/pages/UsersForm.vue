@@ -110,7 +110,7 @@
             
           }],
           password:[() => {
-            if(this.password.length < 8){
+            if( this.password.length < 8 && this.password.length > 0 ){
               this.statusValidation[1] = false
               return 'Deben haber al menos 8 digitos para la contraseña'
             }
@@ -163,10 +163,11 @@
 
               /* eslint-disable-next-line */
               //console.log(key)
-              if( key !== "id" &&  key !== "password" &&  key !== "isAdmin" )
+              if( key !== "id" &&  key !== "password" &&  key !== "isAdmin" 
+              && key!=="createdDate" && key!=="lastModifiedDate" )
               {
                 /* eslint-disable-next-line */
-                //console.log(user[key])
+                console.log(user[key],key)
                 if(user[key].length == 0)
                 {
                     objectValidity = false

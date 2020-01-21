@@ -42,7 +42,7 @@ export default {
     Login
   },
   created (){
-    this.loggedIn = auth.loggedIn();
+    //this.loggedIn = auth.loggedIn();
     this.$vuetify.theme.dark = true;    
     
     //this.$Progress.start();
@@ -70,9 +70,17 @@ export default {
     });
 
   },
+  computed:{
+
+    loggedIn(){
+      // `this` points to the vm instance
+      return auth.loggedIn();
+    }
+    
+  },
   data(){
     return{
-      loggedIn: null,
+      
     }    
   },
   mounted(){

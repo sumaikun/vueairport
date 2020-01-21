@@ -12,13 +12,13 @@
                     
                       <v-text-field                      
                               label="Número de transacción"  
-                              v-model="sku"                    
+                              v-model="transeqno"                    
                       ></v-text-field>
                                
                   </v-col>
                   <v-col  lg="6" md="12" sm="12" xs="12" cols="12">  
                     <v-row  justify="center" >
-                      <v-btn color="primary" @click="filterFromNodeSkus()" x-large >
+                      <v-btn color="primary" @click="filterFromTransaq()" x-large >
                         Filtrar transacción
                       </v-btn>  
                     </v-row>       
@@ -51,13 +51,7 @@
             <v-btn color="primary" @click="filterFromNodeDates()" x-large >Filtrar por fechas</v-btn>
           </v-row>
         </v-col>
-        <!--
-        <v-col  lg="6" md="6" sm="12">
-          <v-row  justify="center" >
-            <v-btn color="primary" @click="getItems()" x-large >Traer todos los datos</v-btn>
-          </v-row>  
-        </v-col>
-        -->
+     
       </v-row>
       <br>
 
@@ -66,9 +60,18 @@
     <br>
    
     <v-card>
+
+        <v-btn title="Descargar" class="green lighten-1 iconButtons"
+         fab small dark @click.native="csvExport()">
+            <v-icon>mdi-domain</v-icon>
+        </v-btn>
+
         <v-card-title>
-        Trazabilidad
+        Lista de transacciones efectuadas
         <div class="flex-grow-1"></div>
+
+        
+
         <v-text-field
             v-model="search"
             append-icon="search"
@@ -82,15 +85,12 @@
         :headers="headers"
         :items="items"
         :search="search"
-        >      
-       
-
-        <!-- table options -->
-          <template v-slot:item.button_action="{ item }">
-            <v-btn color="primary" @click="trackItem(item)" >traz.</v-btn>
+        >     
+           <!-- table options -->
+          <template v-slot:item.card="{ item }">
+            <span> {{ item.card.replace(/^.{14}/g, '**** **')  }} </span>
           </template>
 
-        
         </v-data-table>
     </v-card>
    </v-container>
@@ -99,88 +99,83 @@
 <script>
     /* eslint-disable */
 
+  //import { mapState } from "vuex";
+
   export default {
     components:{     
     },
+    created(){
+      const getData = () => { this.$store.dispatch("businessEvents/getAllEvents") };
+      this.timer = setInterval( getData, 10000)
+    },
     computed:{
       items(){
-        return []
-        //return this.$store.state.items
+        //return []
+        return this.$store.state.businessEvents.items
       },
-      isFetching(){
-          return false
-          //return this.$store.state.isFetching
-      },
-      tracks(){
-          return []
-          //return this.$store.state.tracks
-      }
-    },
+      
+    },   
     data () {
       return {
         search: '',
         dialog: false,
         headers: [
           { text: 'Cliente', value: 'customer' },
-          { text: 'Transacción', value: 'state' },   
+          { text: 'Transacción', value: 'transaction' },   
           { text: 'Tarjeta', value: 'card' },
-          { text: 'Estado', value: 'ubication' },             
-          { text: 'Sala', value: 'ubication' },                  
-          { text: 'Adultos acompañantes', value: 'description' },
-          { text: 'Niños acompañantes', value: 'description' },
-          { text: 'Fecha', value: 'timefield' },          
+          { text: 'Estado', value: 'state' },             
+          { text: 'Sala', value: 'lounge' },                  
+          { text: 'Adultos acompañantes', value: 'adultC' },
+          { text: 'Niños acompañantes', value: 'childC' },
+          { text: 'Fecha', value: 'createdDate' },          
         ],
-        filters: {
-          sku: [],
+        filters: {        
           state: []
         },
         //picker: new Date().toISOString().substr(0, 10),
         //picker2: new Date().toISOString().substr(0, 10),
         picker: null,
         picker2: null,
-        sku:""
+        transeqno: null,
+        timer: ''
       }
     },
     methods:{
-      getItems: function() {
-        this.$store.dispatch('getItems');
-      },
-      trackItem(item)
-      {
-        console.log(item);
-        this.dialog = true;
-        this.$store.dispatch('getTracks',item.epc);
-      },
-      columnValueList(val) {
-        return this.items.map(d => d[val])
-      },
-      filterFromNodeSkus(){
-        console.log(this.sku);
-        
-        let query = "";
-        
-        if(this.sku)
-        {
-          console.log("enviar sku");
-          query = "filter[where][sku]="+this.sku;
-        }       
-
-        if(query != "")
-        {
-          this.$store.dispatch('getItemsWithFilter',query);
-        }        
-
-      },
+     
       filterFromNodeDates(){
         console.log(this.picker);
         console.log(this.picker2);
         this.$store.dispatch("selectItemsRangeBetween2DatesQuery",{ date1:this.picker,date2:this.picker2});
         
-      }      
+      },
+      filterFromTransaq(){
+
+      },
+      csvExport() {
+      
+        let arrData = this.items;
+        let csvContent = "data:text/csv;charset=utf-8,";
+        csvContent += [
+          Object.keys(arrData[0]).join(";"),
+          ...arrData.map(item => Object.values(item).join(";"))
+        ]
+          .join("\n")
+          .replace(/(^\[)|(\]$)/gm, "");
+
+        const data = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", data);
+        link.setAttribute("download", "report.csv");
+        link.click();
+      }
+
     },
     beforeMount(){
       //this.getItems()
     },
+    beforeDestroy () {
+      clearInterval(this.timer)
+    }
    
     
   }

@@ -91,6 +91,14 @@ import { mapState } from "vuex";
         },
         methods: {
 
+            reloadData(){
+                /* eslint-disable-next-line */
+                //console.log(this.$store);
+                if(!this.loading)
+                {
+                    this.$store.dispatch("users/getAllUsers")
+                }
+            },
             add(){
                 this.$router.push('UserForm');
             },

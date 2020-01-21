@@ -24,17 +24,19 @@ instance.interceptors.request.use(function (config) {
   return config
 }, function (error) {
   // Do something with request error
+  // eslint-disable-next-line no-console
+  //console.log("front end error",error.config,"e",error.response) 
   return Promise.reject(error)
 })
 
 instance.interceptors.response.use((response) => {
      // eslint-disable-next-line no-console
-     //console.log("error response",response)
+     console.log("error response",response)
      return response;
   }, (error) => {
     // eslint-disable-next-line no-console
-    console.log("api error",error.config)   
-  return Promise.reject(error)
+    console.log(JSON.stringify(error));
+    return Promise.reject(error)
 })
 
 export default {
@@ -42,7 +44,7 @@ export default {
     let url = `${BASE_URL}`
     url += action
     /* eslint-disable-next-line */
-    console.log("app url",url);
+    //console.log("app url",url);
     return instance.get(url)
   },
   postData (action, data) {

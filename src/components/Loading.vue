@@ -1,6 +1,6 @@
 <template>
-  <v-container>
-    <div class="text-center" v-if="isFetching">
+  <v-container >
+    <div class="text-center" style="height:0"  v-if="isFetching">
         <v-progress-circular
         :size="50"
         color="primary"
@@ -39,8 +39,8 @@
         computed: {
             isFetching(){
                 /* eslint-disable-next-line */
-                //console.log("computed in fetching",this.$store.state.users);
-                return this.$store.state.users.loading
+                //console.log("computed in fetching",this.$store.state.users,this.$store.state.businessEvents)
+                return this.$store.state.users.loading || this.$store.state.businessEvents.loading
             }
         }
     }

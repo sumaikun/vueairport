@@ -22,6 +22,8 @@ Vue.config.productionTip = false
 //forcing global
 window.Store = store;
 
+
+
 const options = {
   color: '#2196f3',
   failedColor: '#874b4b',

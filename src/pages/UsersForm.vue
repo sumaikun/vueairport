@@ -21,7 +21,7 @@
           </v-btn>
         </v-card-title>
 
-         <Loading style="display:absolute" ></Loading>
+         <Loading></Loading>
 
         <v-card-text>
           <v-container fluid grid-list-sm>

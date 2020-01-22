@@ -13,7 +13,7 @@ instance.interceptors.request.use(function (config) {
   /* global Store */
   const {token} = Store.state.user
   // eslint-disable-next-line no-console
-  console.log("token", token)
+  //console.log("token", token)
   if (token) {
     config.headers.common['Authorization'] = 'Bearer ' + token
     config.headers.common['Access-Control-Allow-Origin'] = '*'
@@ -31,11 +31,20 @@ instance.interceptors.request.use(function (config) {
 
 instance.interceptors.response.use((response) => {
      // eslint-disable-next-line no-console
-     console.log("error response",response)
+     //console.log("response",response)
      return response;
   }, (error) => {
     // eslint-disable-next-line no-console
-    console.log(JSON.stringify(error));
+    console.log(error.config,error.message,error.config.url.includes("authenticate"));
+
+    if( ( error.message.includes("401") ||  error.message.includes("403") ) 
+        && error.config.url.includes("authenticate") === false )
+    {
+      alert("Credenciales expiradas ,Debe volver a logearse");
+      Store.dispatch("user/logout");
+      window.location.reload();
+    }
+
     return Promise.reject(error)
 })
 

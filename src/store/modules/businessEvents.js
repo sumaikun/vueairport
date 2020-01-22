@@ -9,14 +9,15 @@ import {
 const state = {
   items: [],
   pagination: {},
-  loading: true,
+  loading: false,
+  startDate: null,
+  endDate: null
 };
 
 const getters = {};
 
 /* eslint-disable */
 const actions = {
-
 
   getAllEvents({ commit }) {
     
@@ -35,17 +36,43 @@ const actions = {
     });
 
   },
- 
 
 
+  getEventsByDates({ commit }, dates ) {
+    
+    commit("setLoading", { loading: true });
+
+    commit("setStartDate", dates.startDate);
+
+    commit("setEndDate", dates.endDate);
+    
+    api.postData("businessEvents/filterDates",dates).then(res => {
+
+      /* disable-next-line */
+      console.log("data",res.data);
+      //const customers = res.data;     
+
+      commit("setItems", res.data);
+
+      commit("setLoading", { loading: false });
+
+    });
+
+  },
 
 };
 /* eslint-disable */
 
 const mutations = {
 
-  setItems (state, customers) {
-    state.items = customers;
+  setStartDate (state, startDate){
+    state.startDate = startDate
+  },
+  setEndDate (state, endDate){
+    state.endDate = endDate
+  },
+  setItems (state, businessEvents) {
+    state.items = businessEvents;
   },
   setPagination (state, pagination) {
     state.pagination = pagination;

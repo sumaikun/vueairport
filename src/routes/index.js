@@ -34,6 +34,7 @@ export default new Router({
         { path: '/userform', component: UsersForm, name: 'UserForm', beforeEnter: requireAuth },
         { path: '/dashboard', component: Dashboard, name: 'Dashboard', beforeEnter: requireAuth },
         { path: '/reports', component: Reports, name: 'Reports', beforeEnter: requireAuth },
+        { path: '/reports/:type', component: Reports, name: 'ReportsFiltered', beforeEnter: requireAuth },
         { path: '/user/:id', component: UsersForm, name: 'User', beforeEnter: requireAuth },
         { path: '/', redirect: '/login' }
     ]

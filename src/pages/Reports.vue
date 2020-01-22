@@ -6,7 +6,8 @@
       <v-container fluid>
         <div>
           <h3>Filtros:</h3>
-          
+
+            <!--
               <v-row>  
                   <v-col  lg="6" md="12" sm="12" cols="12">
                     
@@ -24,18 +25,18 @@
                     </v-row>       
                   </v-col>
               </v-row>
-              
+            -->  
           
             <v-row> 
 
              <v-col  lg="6" md="6" sm="12">
                <v-row  align="center" justify="center" > 
-                <v-date-picker v-model="picker"></v-date-picker>
+                <v-date-picker v-model="startDate"></v-date-picker>
                </v-row> 
               </v-col>
               <v-col  lg="6" md="6" sm="12">
                 <v-row  align="center" justify="center" >
-                  <v-date-picker v-model="picker2"></v-date-picker>
+                  <v-date-picker v-model="endDate"></v-date-picker>
                 </v-row>
               </v-col>
 
@@ -48,7 +49,7 @@
       <v-row>   
         <v-col  lg="12" md="12" sm="12">
           <v-row  justify="center" >
-            <v-btn color="primary" @click="filterFromNodeDates()" x-large >Filtrar por fechas</v-btn>
+            <v-btn color="primary" @click="filterFromDates()" x-large >Filtrar por fechas</v-btn>
           </v-row>
         </v-col>
      
@@ -58,6 +59,8 @@
     </v-card>  
 
     <br>
+
+    <!--<Loading></Loading>-->
    
     <v-card>
 
@@ -83,12 +86,16 @@
 
         <v-data-table
         :headers="headers"
-        :items="items"
+        :items=" itemsFiltered || items"
         :search="search"
         >     
            <!-- table options -->
           <template v-slot:item.card="{ item }">
             <span> {{ item.card.replace(/^.{14}/g, '**** **')  }} </span>
+          </template>
+
+          <template v-slot:item.state="{ item }">
+            <span> {{ parseStates(item.state)  }} </span>
           </template>
 
         </v-data-table>
@@ -101,12 +108,40 @@
 
   //import { mapState } from "vuex";
 
+  import Loading from "@/components/Loading.vue"
+
+  import moment from "moment"
+
   export default {
-    components:{     
+    components:{  
+      Loading   
     },
     created(){
-      const getData = () => { this.$store.dispatch("businessEvents/getAllEvents") };
-      this.timer = setInterval( getData, 10000)
+
+      if( this.$store.state.businessEvents.startDate != null  && 
+       this.$store.state.businessEvents.startDate === this.$store.state.businessEvents.endDate &&
+       this.$store.state.businessEvents.startDate === moment().format("YYYY-MM-DD")   )
+       {
+         /* eslint-disable-next-line */
+         console.log("condición cumplida");
+
+          const getData = ()=>{ this.$store.dispatch("businessEvents/getEventsByDates",{
+              "startDate":moment().format("YYYY-MM-DD"),
+              "endDate":moment().format("YYYY-MM-DD")
+            })
+          }
+
+          this.timer = setInterval( getData, 10000)
+          
+       }
+       else{
+         /* eslint-disable-next-line */
+         console.log("condición no cumplida",this.$store.state.businessEvents.startDate === this.$store.state.businessEvents.endDate,
+         this.$store.state.businessEvents.startDate === moment().format("YYYY-MM-DD"), this.$store.state.businessEvents , moment().format("YYYY-MM-DD") );
+
+       }
+
+      
     },
     computed:{
       items(){
@@ -119,6 +154,9 @@
       return {
         search: '',
         dialog: false,
+        itemsFiltered: null,
+        startDate:null,
+        endDate:null,
         headers: [
           { text: 'Cliente', value: 'customer' },
           { text: 'Transacción', value: 'transaction' },   
@@ -131,21 +169,23 @@
         ],
         filters: {        
           state: []
-        },
-        //picker: new Date().toISOString().substr(0, 10),
-        //picker2: new Date().toISOString().substr(0, 10),
-        picker: null,
-        picker2: null,
+        },      
         transeqno: null,
         timer: ''
       }
     },
     methods:{
      
-      filterFromNodeDates(){
-        console.log(this.picker);
-        console.log(this.picker2);
-        this.$store.dispatch("selectItemsRangeBetween2DatesQuery",{ date1:this.picker,date2:this.picker2});
+      filterFromDates(){
+
+          this.itemsFiltered = null;
+         
+          this.$store.dispatch("businessEvents/getEventsByDates",{
+            "startDate": this.startDate,
+            "endDate": this.endDate
+          })
+
+          clearInterval(this.timer)
         
       },
       filterFromTransaq(){
@@ -167,6 +207,22 @@
         link.setAttribute("href", data);
         link.setAttribute("download", "report.csv");
         link.click();
+      },
+      parseStates(state){
+
+        switch(state){
+
+          case "QUERY":
+            return "Consultado";
+          case "ORDER":
+            return "Aprobado";
+          case "CANCEL":
+            return "Cancelado";
+          case "REJECT":
+            return "Rechazado";
+
+        }
+
       }
 
     },
@@ -175,6 +231,34 @@
     },
     beforeDestroy () {
       clearInterval(this.timer)
+    },
+    mounted() {
+      if (this.$route.params.type) {
+        
+        switch(this.$route.params.type){
+
+          case "all":
+
+            this.itemsFiltered = this.items.filter( data => data.state === "ORDER" )
+
+            break;
+
+          case "rejects":
+
+            this.itemsFiltered = this.items.filter( data => data.state === "REJECT" )
+
+            break;
+
+          case "cancels":
+
+            this.itemsFiltered = this.items.filter( data => data.state === "CANCEL" )
+
+            break;
+
+        }
+        
+
+      } 
     }
    
     

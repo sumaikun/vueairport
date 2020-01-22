@@ -10,13 +10,8 @@ import {
 const state = {
   items: [],
   pagination: {},
-  loading: true,
-  mode: "",
-  snackbar: false,
-  notice: "",
-  user: new User(),
-  orders: [],
-  orderList: [],
+  loading: false,  
+  user: new User()
 };
 
 const getters = {};
@@ -25,7 +20,9 @@ const getters = {};
 const actions = {
 
   getUserById ({ commit }, id) {
+    
     commit("setLoading", { loading: true });
+
     if (id) {
       api.getData("users/" + id).then(
         res => {

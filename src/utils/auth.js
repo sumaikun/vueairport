@@ -1,5 +1,7 @@
 /* globals Store */
 
+
+
 import api from "../services/backend-api.js"
 
 export default {
@@ -7,10 +9,20 @@ export default {
 
     api.login('authenticate',  { username, password } ).then((res) => {
 
+      /* eslint-disable-next-line */
+      console.log("verify role",res.data.role.length);
+
+      if(res.data.role.length == 0 )
+      {        
+        if (cb) cb(false, true); 
+        return;       
+      }
+
+
       const token = res.data.token
       const user = null
       // eslint-disable-next-line no-console
-      console.log("token",token);
+      //console.log("token",token);
 
       Store.dispatch('user/updateUser', {user , token})      
      

@@ -17,7 +17,7 @@
       <v-flex md3 sm6 xs12 v-for="(stat,index) in stats.monthlyStats" v-bind:key="index">
         <v-card :class="stat.bgColor" dark>
           <v-container fluid grid-list-sm dark>
-            <!--<Loading></Loading>-->
+            <Loading></Loading>
             <v-layout class="mt-0 mb-0 mx-1" row wrap>
               <v-flex sm3 hidden-xs-only>
                 <v-icon class="mx-0" x-large dark>{{stat.icon}}</v-icon>
@@ -67,7 +67,7 @@
   //import Doughnut from "../components/chart/Doughnut";
   //import LineChart from "../components/chart/LineChart";
 
-  //import Loading from "@/components/Loading.vue";
+  import Loading from "@/components/Loading.vue";
   
   import moment from "moment"
 
@@ -77,7 +77,7 @@
       /* eslint-disable-next-line */
       console.log(moment().format("YYYY-MM-DD"));
 
-      if(this.$store.state.businessEvents.startDate === moment().format("YYYY-MM-DD") &&
+      if(this.$store.state.businessEvents.startDate !== moment().format("YYYY-MM-DD") ||
         this.$store.state.businessEvents.startDate != this.$store.state.businessEvents.endDate
         || this.$store.state.businessEvents.startDate === null )
       {
@@ -89,12 +89,15 @@
           "endDate":moment().format("YYYY-MM-DD")
         })*/
 
-        alert("here");
+        //alert("here");
 
       }
       else{
 
-        this.pickerDate = this.$store.state.businessEvents.items.startDate ? this.$store.state.businessEvents.items.startDate :  moment().format("YYYY-MM-DD")
+        /* eslint-disable */
+        //console.log(this.$store.state.businessEvents.items)
+
+        this.pickerDate = this.$store.state.businessEvents.startDate ? this.$store.state.businessEvents.startDate :  moment().format("YYYY-MM-DD")
 
         /*this.$store.dispatch("businessEvents/getEventsByDates",{
           "startDate":this.$store.state.businessEvents.items.startDate,
@@ -171,7 +174,7 @@
       };
     },
     components: {
-      //Loading
+      Loading
     },
     mounted() { 
       

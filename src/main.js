@@ -5,7 +5,7 @@ import routes from './routes'
 import store from './store';
 import VueProgressBar from 'vue-progressbar'
 import VueSweetalert2 from 'vue-sweetalert2'
-
+import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
 // If you don't need the styles, do not connect
 import 'sweetalert2/dist/sweetalert2.min.css';

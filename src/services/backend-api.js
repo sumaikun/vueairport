@@ -1,6 +1,11 @@
+/*  Globlas Store */
+
 import axios from 'axios'
 
-const BASE_URL = 'http://localhost:8089/'
+const BASE_URL = process.env.VUE_APP_SERVER_HOST
+
+/* eslint-disable-next-line */
+console.log("BASE URL",BASE_URL,process.env);
 
 const instance = axios.create({
   baseURL: BASE_URL,
@@ -11,6 +16,9 @@ const instance = axios.create({
 // Add a request interceptor
 instance.interceptors.request.use(function (config) {
   /* global Store */
+
+  Store.dispatch("app/loadingState", true );
+
   const {token} = Store.state.user
   // eslint-disable-next-line no-console
   //console.log("token", token)
@@ -26,14 +34,21 @@ instance.interceptors.request.use(function (config) {
   // Do something with request error
   // eslint-disable-next-line no-console
   //console.log("front end error",error.config,"e",error.response) 
+
+  Store.dispatch("app/loadingState",  false );
+
   return Promise.reject(error)
 })
 
 instance.interceptors.response.use((response) => {
      // eslint-disable-next-line no-console
      //console.log("response",response)
+     Store.dispatch("app/loadingState",  false );
      return response;
   }, (error) => {
+
+    Store.dispatch("app/loadingState", false );
+
     // eslint-disable-next-line no-console
     console.log(error.config,error.message,error.config.url.includes("authenticate"));
 

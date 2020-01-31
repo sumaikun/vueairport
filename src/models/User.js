@@ -6,6 +6,7 @@ export class User {
       this.name = "";
       this.secondname = "";
       this.email = "";
+      this.permissions = []
       this.isAdmin = false;
     }
 }

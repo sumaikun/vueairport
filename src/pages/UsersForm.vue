@@ -65,6 +65,17 @@
                     <v-flex md12 sm12  class="mx-1 px-0">
                       <v-switch label="Es administrador" v-model="user.isAdmin" light></v-switch>
                     </v-flex>
+                    <v-flex md12 sm12  class="mx-1 px-0">
+                        <h3>Gestión de permisos</h3>
+                    </v-flex>
+                   
+                        <v-flex md2 sm12  xs4 v-for="(item, index) in rooms" v-bind:key="index" class="mx-1 px-0">
+                            <v-checkbox 
+                              v-model="roomsSelected" :value="item.id" :label="item.name"></v-checkbox>
+                         </v-flex> 
+
+                      
+
                   </v-layout>
                 </v-container>
               </v-flex>
@@ -90,7 +101,7 @@
     },
     data() {
       return {
-
+        roomsSelected: [],
         title: '',
         statusValidation: [],
         password:'',
@@ -144,6 +155,9 @@
         user: 'user',
         loading: 'loading',    
       }),
+      rooms(){
+        return this.$store.state.rooms.items;
+      }
     },
     methods: {
 
@@ -164,7 +178,7 @@
               /* eslint-disable-next-line */
               //console.log(key)
               if( key !== "id" &&  key !== "password" &&  key !== "isAdmin" 
-              && key!=="createdDate" && key!=="lastModifiedDate" )
+              && key!=="createdDate" && key!=="lastModifiedDate" && key!=="permissions" )
               {
                 /* eslint-disable-next-line */
                 console.log(user[key],key)
@@ -200,6 +214,11 @@
             user.isAdmin === null ? user.isAdmin = false : false
           }
 
+          if(this.roomsSelected.length > 0 )
+          {
+            user.permissions = this.roomsSelected;
+          }
+
           this.$store.dispatch('users/saveUser', user).then( (data) =>{
             /* eslint-disable-next-line */
             if(data)
@@ -218,19 +237,33 @@
     },
     created() {
 
-      this.statusValidation = [];
-      this.snackbar = false;
-      this.timeout = 5000;
-      
+      this.statusValidation = [];      
       //if (this.$route.params.id) {
         this.$store.dispatch("users/getUserById",this.$route.params.id);       
       //}
+      this.$store.dispatch("rooms/getAll"); 
 
     },
     mounted() {
       if (this.$route.params.id) {
         this.title = 'Editar Usuario'
       } else this.title = 'Nuevo Usuario'
+    },
+    watch:{
+      user(val){
+        /* eslint-disable-next-line */
+        console.log(val.permissions);
+        if(val.permissions && this.roomsSelected.length === 0)
+        {
+          /* eslint-disable-next-line */
+          console.log("generate info");
+
+          val.permissions.forEach(element => {
+            this.roomsSelected.push(element);
+          });
+
+        }
+      }
     }
   }
 </script>

@@ -9,8 +9,7 @@ import {
 
 const state = {
   items: [],
-  pagination: {},
-  loading: false,  
+  pagination: {},  
   user: new User()
 };
 
@@ -19,9 +18,7 @@ const getters = {};
 /* eslint-disable */
 const actions = {
 
-  getUserById ({ commit }, id) {
-    
-    commit("setLoading", { loading: true });
+  getUserById ({ commit , dispatch }, id) {    
 
     if (id) {
       api.getData("users/" + id).then(
@@ -30,34 +27,31 @@ const actions = {
           //console.log("data",res.data);
           const user = res.data;
           commit("setUser", { user } );
-          commit("setLoading", { loading: false });
+          //dispatch("app/loadingState", { loading: false }, {root:true});
         },
         err => {
           console.log(err);
+          
         }
       );
     } else {
       commit("setUser", { user: new User() });
-      commit("setLoading", { loading: false });
+      
     }
   },
 
-  getAllUsers({ commit }) {
+  getAllUsers({ commit , dispatch }) {
     
-    commit("setLoading", { loading: true });
-    
+   
     api.getData("users").then(res => {
 
       /* disable-next-line */
       console.log("data",res.data);
       //const customers = res.data;     
 
-      commitPagination(commit, res.data);
+      commitPagination(commit, res.data);      
 
-      commit("setLoading", { loading: false });
-
-    });
-
+    })
   },
  
   deleteCustomer ({}, id ) {
@@ -115,9 +109,6 @@ const mutations = {
   },
   setPagination (state, pagination) {
     state.pagination = pagination;
-  },
-  setLoading (state, { loading }) {
-    state.loading = loading;
   },  
   setUser (state, { user }) {
     state.user = user;

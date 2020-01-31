@@ -12,7 +12,7 @@ export default {
       /* eslint-disable-next-line */
       console.log("verify role",res.data.role.length);
 
-      if(res.data.role.length == 0 )
+      if(res.data.role[0].authority == "ROLE_USER" )
       {        
         if (cb) cb(false, true); 
         return;       
@@ -20,7 +20,7 @@ export default {
 
 
       const token = res.data.token
-      const user = null
+      const user = { ROLE :  res.data.role[0].authority }
       // eslint-disable-next-line no-console
       //console.log("token",token);
 

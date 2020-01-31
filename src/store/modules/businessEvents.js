@@ -8,8 +8,7 @@ import {
 
 const state = {
   items: [],
-  pagination: {},
-  loading: false,
+  pagination: {},  
   startDate: null,
   endDate: null
 };
@@ -21,7 +20,7 @@ const actions = {
 
   getAllEvents({ commit }) {
     
-    commit("setLoading", { loading: true });
+    commit("app/loadingState", { loading: true });
     
     api.getData("businessEvents").then(res => {
 
@@ -31,7 +30,7 @@ const actions = {
 
       commitPagination(commit, res.data);
 
-      commit("setLoading", { loading: false });
+      commit("app/loadingState", { loading: false });
 
     });
 
@@ -40,7 +39,7 @@ const actions = {
 
   getEventsByDates({ commit }, dates ) {
     
-    commit("setLoading", { loading: true });
+    commit("app/loadingState", { loading: true });
 
     commit("setStartDate", dates.startDate);
 
@@ -54,7 +53,7 @@ const actions = {
 
       commit("setItems", res.data);
 
-      commit("setLoading", { loading: false });
+      commit("app/loadingState", { loading: false });
 
     });
 
@@ -76,9 +75,6 @@ const mutations = {
   },
   setPagination (state, pagination) {
     state.pagination = pagination;
-  },
-  setLoading (state, { loading }) {
-    state.loading = loading;
   }
 };
 

@@ -17,12 +17,30 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-list-item @click="clickMenu('Users')" router>
+        <v-list-item @click="clickMenu('Users')" v-if="userRole  ===  'ROLE_ADMIN' " router>
           <v-list-item-action>
             <v-icon>mdi-account</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title >Usuarios</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item @click="clickMenu('Parameters')" v-if="userRole  ===  'ROLE_ADMIN' " router>
+          <v-list-item-action>
+            <v-icon>mdi-hammer</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title >Configurar Parametros</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <v-list-item @click="clickMenu('Rooms')" v-if="userRole  ===  'ROLE_ADMIN' "  router>
+          <v-list-item-action>
+            <v-icon>mdi-star</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Salas</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
 
@@ -45,6 +63,9 @@
         </v-list-item>
 
       </v-list>
+
+      
+
     </v-navigation-drawer>
 
     <v-app-bar
@@ -80,6 +101,11 @@
     }),
     created () {
       this.$vuetify.theme.dark = true
+    },
+    computed:{
+      userRole(){
+        return this.$store.state.user.user.ROLE
+      }
     },
     methods:{
       clickMenu(route) {        

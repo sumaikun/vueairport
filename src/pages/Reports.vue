@@ -60,7 +60,7 @@
 
     <br>
 
-    <!--<Loading></Loading>-->
+    <Loading></Loading>
    
     <v-card>
 
@@ -120,7 +120,8 @@
 
       if( this.$store.state.businessEvents.startDate != null  && 
        this.$store.state.businessEvents.startDate === this.$store.state.businessEvents.endDate &&
-       this.$store.state.businessEvents.startDate === moment().format("YYYY-MM-DD")   )
+       this.$store.state.businessEvents.startDate === moment().format("YYYY-MM-DD") &&
+         this.$route.params.type === null )
        {
          /* eslint-disable-next-line */
          console.log("condición cumplida");

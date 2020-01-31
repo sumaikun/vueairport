@@ -39,8 +39,8 @@
         computed: {
             isFetching(){
                 /* eslint-disable-next-line */
-                //console.log("computed in fetching",this.$store.state.users,this.$store.state.businessEvents)
-                return this.$store.state.users.loading || this.$store.state.businessEvents.loading
+                //console.log("computed in fetching",this.$store.state.app)
+                return ( this.$store.state.app.loading ) 
             }
         }
     }
